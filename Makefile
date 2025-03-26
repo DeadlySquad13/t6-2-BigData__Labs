@@ -34,10 +34,15 @@ rm-all-containers:
 
 # # Apache hadoop specific.
 prepare-hadoop:
-	git submodule update --init --recursive -- ./Apache__hadoop
+	git submodule update --init --recursive -- ./Apache__Hadoop
 
-pull-hadoop: prepare-hadoop
-	docker compose -f ./Apache__hadoop/docker-compose-non-dev.yml pull
+# TODO: Reuse `build-image` target.
+build-hadoop:
+	docker build -t "${IMAGE_NAME}" ./Apache__Hadoop
 
-up-hadoop:
-	docker compose -f ./Apache__hadoop/docker-compose-non-dev.yml up
+# TODO: Reuse `run` target.
+run-hadoop:
+	docker run -it --name "${CONTAINER_NAME}" -p 9864:9864 -p "${ADMIN_PANEL_PORT}":9870 -p 8088:8088 --hostname "${ADMIN_PANEL_HOST}" "${IMAGE_NAME}"
+
+open-hadoop-admin-panel:
+	open http://"${ADMIN_PANEL_HOST}":"${ADMIN_PANEL_PORT}"
