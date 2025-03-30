@@ -2,10 +2,10 @@ import argparse
 import time
 from pathlib import Path
 
-from tqdm import tqdm
 import numpy as np
 import pandas as pd
 from faker import Faker
+from tqdm import tqdm
 
 
 def generate_data(
@@ -34,7 +34,10 @@ def generate_data(
         * id - Sequential identifier
         * name - Full name
         * email - Email address
-        * age - Age
+        * age - Age of the user
+        * message_length - Length of the message
+        * message - Message in specified locale
+        * day_of_week - Day of the week the message was written
 
     Example:
         >>> generate_fake_data_with_pandas('output.csv', 1000000, chunksize=50000, locale='fr_FR')
@@ -58,12 +61,15 @@ def generate_data(
 
             df = pd.DataFrame(
                 {
-                    "id": np.arange(chunk * batch_size, (chunk + 1) * batch_size, dtype=int),
+                    "id": np.arange(
+                        chunk * batch_size, (chunk + 1) * batch_size, dtype=int
+                    ),
                     "name": [fake.name() for _ in range(batch_size)],
                     "email": [fake.email() for _ in range(batch_size)],
                     "age": rng.integers(low=18, high=99, size=batch_size),
                     "message_length": [len(msg) for msg in messages],
                     "message": messages,
+                    "day_of_week": [fake.day_of_week() for _ in range(batch_size)],
                 }
             )
 
