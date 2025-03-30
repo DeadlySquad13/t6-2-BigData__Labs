@@ -1,6 +1,6 @@
 <!-- toc -->
 
-# Pull Requests Analyzer
+# $ProjectName
 ## [Methodology chosen][2]
 [Data Science Lifecycle Process][1].
 See [Branch Types][3] for branching naming model.
