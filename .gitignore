@@ -21,6 +21,7 @@ __pycache__/
 
 # Datasets
 src/*/data
+data/*
 
 # C extensions
 *.so
