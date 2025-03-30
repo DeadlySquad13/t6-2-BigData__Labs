@@ -1,3 +1,5 @@
+<!-- toc -->
+
 # Big Data
 ## Apache Hadoop
 Run:
@@ -21,3 +23,7 @@ Has [Base template](https://github.com/dsOmega-bootstrap/Base.bootstrap) feature
 ### How to Use
 See [.env.example](./.env.example). Copy it to `.env` and fill.
 
+## Contributing
+See guidelines in [Contributing](./CONTRIBUTING.md). This projects also
+has Docker support, see ["Running in Docker"
+section in Contributing](./CONTRIBUTING.md#running-in-docker).

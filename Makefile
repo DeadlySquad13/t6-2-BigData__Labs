@@ -1,13 +1,34 @@
-ifneq (,$(wildcard ./.env))
-    include .env
+ifneq (,$(wildcard ./.env.dev))
+    include .env.dev
     export
 endif
 
-execute-init: ./scripts/init.sql
-	docker exec "${CONTAINER_NAME}" psql --dbname="${DATABASE_NAME}" --username "${DATABASE_USERNAME}" --password "${DATABASE_PASSWORD}" --file /scripts/init.sql
+# Reproducible environment: building, linting and other infrastructure tasks.
+test:
+	pixi run test
 
-execute-export-xml: ./scripts/export-xml.sql
-	docker exec "${CONTAINER_NAME}" psql --dbname="${DATABASE_NAME}" --username "${DATABASE_USERNAME}" --password "${DATABASE_PASSWORD}" --file /scripts/export-xml.sql
+# # Docker
+build-image:
+	docker build . -t ${IMAGE_NAME}
+
+start:
+	docker run --name "${CONTAINER_NAME}" --detach --rm "${IMAGE_NAME}"
+
+lint-check:
+	docker exec "${CONTAINER_NAME}" pixi run --environment dev lint-check
+
+format-check:
+	docker exec "${CONTAINER_NAME}" pixi run --environment dev format-check
+
+types-check:
+	docker exec "${CONTAINER_NAME}" pixi run --environment dev types-check
+
+order-imports-check:
+	docker exec "${CONTAINER_NAME}" pixi run --environment dev order-imports-check
+
+# ## Utils
+connect:
+	docker run --name ${CONTAINER_NAME} -it ${IMAGE_NAME} --entrypoint /bin/bash
 
 up:
 	docker compose up --detach
@@ -21,7 +42,14 @@ connect:
 connect-to-bd:
 	docker exec -it "${CONTAINER_NAME}" psql --dbname="${DATABASE_NAME}" --username "${DATABASE_USERNAME}" --password "${DATABASE_PASSWORD}"
 
-# Testing docker image.
+# ## Database.
+execute-init: ./scripts/init.sql
+	docker exec "${CONTAINER_NAME}" psql --dbname="${DATABASE_NAME}" --username "${DATABASE_USERNAME}" --password "${DATABASE_PASSWORD}" --file /scripts/init.sql
+
+execute-export-xml: ./scripts/export-xml.sql
+	docker exec "${CONTAINER_NAME}" psql --dbname="${DATABASE_NAME}" --username "${DATABASE_USERNAME}" --password "${DATABASE_PASSWORD}" --file /scripts/export-xml.sql
+
+# ## Testing docker image.
 build-image:
 	docker build . -t ${IMAGE_NAME}
 
@@ -32,7 +60,7 @@ run:
 rm-all-containers:
 	docker rm $(docker ps --quiet --all)
 
-# # Apache hadoop specific.
+# ### Apache hadoop specific.
 prepare-hadoop:
 	git submodule update --init --recursive -- ./Apache__Hadoop
 
