@@ -4,7 +4,13 @@
 ## 1. Generating Big Data
 Run `generate-data` script, for example:
 ```py
+# Generate 1 million rows in ./data/test.csv
 pixi run generate-data ./data/test.csv --number_of_rows 10000000
+
+# Generate array of test files in ./data directory with rows specified in
+# array `rows`:
+rows=( 100 1000 10000 100000 1000000 2000000 3000000 4000000 5000000 )
+for i in "${rows[@]}"; do pixi run generate-data ./data/"test-$i.csv" --number_of_rows "$i"; done
 ```
 
 To see full list of options use help:
