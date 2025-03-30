@@ -1,7 +1,18 @@
 <!-- toc -->
 
 # Big Data
-## Apache Hadoop
+## 1. Generating Big Data
+Run `generate-data` script, for example:
+```py
+pixi run generate-data ./data/test.csv --number_of_rows 10000000
+```
+
+To see full list of options use help:
+```py
+pixi run generate-data --help
+```
+
+## 2. Apache Hadoop
 Run:
 ```bash
 make prepare-hadoop
