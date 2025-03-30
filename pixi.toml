@@ -12,14 +12,19 @@ platforms = ["linux-64", "osx-64", "osx-arm64"]
 # are recognized as global).
 postinstall = "pip install --no-build-isolation --no-deps --disable-pip-version-check --break-system-packages -e ."
 build = "echo test"
+# QUESTION: Maybe it's easier to run scripts in dev mode? They would be
+# installed as programs, no need to create script for each package.
+generate-data = "pixi run python src/generate_data/main.py"
 
 [dependencies]
 python = ">=3.8"
-numpy = "==1.26.4"
+numpy = ">=1.26.4,<2"
 gym = ">=0.26.1,<0.27"
 gym-box2d = ">=0.26.1,<0.27"
 matplotlib = ">=3.8.4,<3.9"
-tqdm = ">=4.66.2,<4.67"
+tqdm = ">=4.67.1,<5"
+faker = ">=37.1.0,<38"
+pandas = ">=2.2.3,<3"
 
 [feature.test]
 tasks = { test = "pytest" }
