@@ -123,6 +123,7 @@ celerybeat.pid
 # Environments
 .env
 .env*
+!.envrc
 # - But add example files in git.
 !.env*.example
 .venv
