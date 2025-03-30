@@ -1,6 +1,0 @@
-dotenv ./.env.dev
-# watch_file pixi.lock 
-echo "Activating pixi environment: $MY_PIXI_ENV"
-eval "$(pixi shell-hook --environment $MY_PIXI_ENV)"
-
-# vi:ft=bash
