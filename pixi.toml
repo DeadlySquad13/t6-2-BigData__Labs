@@ -15,6 +15,7 @@ build = "echo test"
 # QUESTION: Maybe it's easier to run scripts in dev mode? They would be
 # installed as programs, no need to create script for each package.
 generate-data = "pixi run python src/generate_data/main.py"
+thread-pool-executer = "pixi run python src/map_reducer/thread_pool_executer.py"
 
 [dependencies]
 python = ">=3.8"
