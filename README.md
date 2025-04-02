@@ -1,7 +1,8 @@
 <!-- toc -->
 
 # Big Data
-## 1. Generating Big Data
+## 1. MapReduce Concept using built-in methods.
+### Generating Big Data
 Run `generate-data` script, for example:
 ```py
 # Generate 1 million rows in ./data/test.csv
@@ -16,6 +17,18 @@ for i in "${rows[@]}"; do pixi run generate-data ./data/"test-$i.csv" --number_o
 To see full list of options use help:
 ```py
 pixi run generate-data --help
+```
+
+### Get Statistics
+```bash
+pixi run thread-pool-executer ./data/test-1000000.csv
+# Or
+pixi run thread-pool-executer ./data/test-1000000.csv --top_n 10 --chunsize 10000
+```
+
+To see full list of options use help:
+```py
+pixi run thread-pool-executer --help
 ```
 
 ## 2. Apache Hadoop
