@@ -36,13 +36,24 @@ Run:
 ```bash
 make prepare-hadoop
 make build-hadoop
-make run-hadoop
+# Or `make run-hadoop` to see logs in real-time.
+make start-hadoop # Will run detached.
 ```
 
-Open admin panel in browser using `make open-hadoop-admin-panel`
+Open admin panel in browser using `make open-hadoop-admin-panel` or
+connect in terminal: `make connect`.
+
+Both `run-hadoop` and `start-hadoop` will create a volume connecting:
+- [data folder on host](./data) and `/home/hduser/data` in container.
+- [scripts folder on host](./scripts) and `/home/hduser/scripts` in container.
 
 > If you have problems opening site check if you have any Nginx settings
 messing up you connection.
+
+> [!warning] Not suitable as is for production environment.
+> See `$HADOOP_HOME/etc/hadoop/hdfs-site.xml` (or in admin panel go to Utilities/Configuration):
+> dfs.permissions
+>   false
 
 ## Contributing
 Created using Base with Docker Project bootstrap template

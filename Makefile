@@ -66,6 +66,7 @@ prepare-hadoop:
 
 # TODO: Reuse `build-image` target.
 build-hadoop:
+	# Curl command [7/16] will run for a bit.
 	docker build -t "${IMAGE_NAME}" ./Apache__Hadoop
 
 # TODO: Reuse `run` target.
