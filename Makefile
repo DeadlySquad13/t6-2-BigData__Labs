@@ -70,7 +70,21 @@ build-hadoop:
 
 # TODO: Reuse `run` target.
 run-hadoop:
-	docker run -it --name "${CONTAINER_NAME}" -p 9864:9864 -p "${ADMIN_PANEL_PORT}":9870 -p 8088:8088 --hostname "${ADMIN_PANEL_HOST}" "${IMAGE_NAME}"
+	docker run -it \
+		-v "$(shell pwd)/scripts":/home/hduser/scripts \
+		-v "$(shell pwd)/data":/home/hduser/data \
+		--name "${CONTAINER_NAME}" --rm \
+		-p 9864:9864 -p "${ADMIN_PANEL_PORT}":9870 -p 8088:8088 \
+		--hostname "${ADMIN_PANEL_HOST}" "${IMAGE_NAME}"
+
+# TODO: Reuse `start` target.
+start-hadoop:
+	docker run -it --detach \
+		-v "$(shell pwd)/scripts":/home/hduser/scripts \
+		-v "$(shell pwd)/data":/home/hduser/data \
+		--name "${CONTAINER_NAME}" --rm \
+		-p 9864:9864 -p "${ADMIN_PANEL_PORT}":9870 -p 8088:8088 \
+		--hostname "${ADMIN_PANEL_HOST}" "${IMAGE_NAME}"
 
 open-hadoop-admin-panel:
 	open http://"${ADMIN_PANEL_HOST}":"${ADMIN_PANEL_PORT}"
