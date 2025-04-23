@@ -89,3 +89,6 @@ start-hadoop:
 
 open-hadoop-admin-panel:
 	open http://"${ADMIN_PANEL_HOST}":"${ADMIN_PANEL_PORT}"
+
+execute-hadoop-map-reduce: ./scripts/hadoop-map-reduce.sh
+	docker exec "${CONTAINER_NAME}" ./scripts/hadoop-map-reduce.sh
