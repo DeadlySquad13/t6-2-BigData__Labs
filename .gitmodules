@@ -1,3 +1,6 @@
 [submodule "Apache__Hadoop"]
 	path = Apache__Hadoop
 	url = git@github.com:DeadlySquad13/hadoop-single-node-cluster.git
+[submodule "Apache__Spark"]
+	path = Apache__Spark
+	url = https://github.com/DeadlySquad13/spark-docker
