@@ -1,21 +1,27 @@
-version: '3'
-
-# See for variables description: https://hub.docker.com/_/postgres/
 services:
-  superset:
-    image: apache/superset:latest
-    container_name: ${CONTAINER_NAME}
-    # environment:
-    #   - POSTGRES_DB=${DATABASE_NAME}
-    #   - POSTGRES_USER=${DATABASE_USERNAME}
-    #   - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-    networks:
-      - superset
+  spark-master:
+    container_name: "${SPARK_CONTAINER_NAME}--master"
+    image: ${SPARK_IMAGE_NAME:-Apache__Spark}
+    environment:
+      ADMIN_PANEL_PORT: ${ADMIN_PANEL_PORT}
+    #   Overriding host volume points to points in our repo nstead of examples in
+    # Apache__Spark submodule.
     volumes:
-      # - ${DATABASE_PATH}:/var/lib/postgres/data
-      - ${LOGS_PATH}:/logs
-      - ./scripts/:/scripts/
+        - ./data:/opt/spark/data
+    extends:
+        file: ./Apache__Spark/docker-compose.yml
+        service: spark-master
 
-networks:
-  superset:
-    name: ${PROJECT_NAME}.Superset
+  spark-history-server:
+    container_name: "${SPARK_CONTAINER_NAME}--history"
+    image: ${SPARK_IMAGE_NAME:-Apache__Spark}
+    extends:
+        file: ./Apache__Spark/docker-compose.yml
+        service: spark-history-server
+
+  spark-worker:
+    container_name: "${SPARK_CONTAINER_NAME}--worker"
+    image: ${SPARK_IMAGE_NAME:-Apache__Spark}
+    extends:
+        file: ./Apache__Spark/docker-compose.yml
+        service: spark-worker

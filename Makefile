@@ -1,7 +1,13 @@
-ifneq (,$(wildcard ./.env.dev))
+ifneq (,$(wildcard ./.env))
     include .env
     export
 endif
+
+ifneq (,$(wildcard ./.env.dev))
+    include .env.dev
+    export
+endif
+
 
 # Reproducible environment: building, linting and other infrastructure tasks.
 test:
@@ -60,35 +66,68 @@ run:
 rm-all-containers:
 	docker rm $(docker ps --quiet --all)
 
-# ### Apache hadoop specific.
+# ### Apache Hadoop specific.
 prepare-hadoop:
 	git submodule update --init --recursive -- ./Apache__Hadoop
 
 # TODO: Reuse `build-image` target.
 build-hadoop:
 	# Curl command [7/16] will run for a bit.
-	docker build -t "${IMAGE_NAME}" ./Apache__Hadoop
+	docker build -t "${HADOOP_IMAGE_NAME}" ./Apache__Hadoop
 
 # TODO: Reuse `run` target.
 run-hadoop:
 	docker run -it \
 		-v "$(shell pwd)/scripts":/home/hduser/scripts \
 		-v "$(shell pwd)/data":/home/hduser/data \
-		--name "${CONTAINER_NAME}" --rm \
-		-p 9864:9864 -p "${ADMIN_PANEL_PORT}":9870 -p 8088:8088 \
-		--hostname "${ADMIN_PANEL_HOST}" "${IMAGE_NAME}"
+		--name "${HADOOP_CONTAINER_NAME}" --rm \
+		-p 9864:9864 -p "${HADOOP_ADMIN_PANEL_PORT}":9870 -p 8088:8088 \
+		--hostname "${ADMIN_PANEL_HOST}" "${HADOOP_IMAGE_NAME}"
 
 # TODO: Reuse `start` target.
 start-hadoop:
 	docker run -it --detach \
 		-v "$(shell pwd)/scripts":/home/hduser/scripts \
 		-v "$(shell pwd)/data":/home/hduser/data \
-		--name "${CONTAINER_NAME}" --rm \
-		-p 9864:9864 -p "${ADMIN_PANEL_PORT}":9870 -p 8088:8088 \
-		--hostname "${ADMIN_PANEL_HOST}" "${IMAGE_NAME}"
+		--name "${HADOOP_CONTAINER_NAME}" --rm \
+		-p 9864:9864 -p "${HADOOP_ADMIN_PANEL_PORT}":9870 -p 8088:8088 \
+		--hostname "${ADMIN_PANEL_HOST}" "${HADOOP_IMAGE_NAME}"
 
 open-hadoop-admin-panel:
-	open http://"${ADMIN_PANEL_HOST}":"${ADMIN_PANEL_PORT}"
+	open http://"${ADMIN_PANEL_HOST}":"${HADOOP_ADMIN_PANEL_PORT}"
 
 execute-hadoop-map-reduce: ./scripts/hadoop-map-reduce.sh
-	docker exec "${CONTAINER_NAME}" ./scripts/hadoop-map-reduce.sh
+	docker exec "${HADOOP_CONTAINER_NAME}" ./scripts/hadoop-map-reduce.sh
+
+# ### Apache Spark specific.
+prepare-spark:
+	git submodule update --init --recursive -- ./Apache__Spark
+
+# TODO: Reuse `build-image` target.
+build-spark: prepare-spark
+	docker build -t "${SPARK_IMAGE_NAME}" ./Apache__Spark
+
+up-spark:
+	docker compose up spark-*
+
+# TODO: Reuse `run` target.
+run-spark:
+	docker run -it \
+		-v "$(shell pwd)/scripts":/home/spark/scripts \
+		-v "$(shell pwd)/data":/home/spark/data \
+		--name "${SPARK_CONTAINER_NAME}" --rm \
+		--hostname "${ADMIN_PANEL_HOST}" "${SPARK_IMAGE_NAME}"
+
+# TODO: Reuse `start` target.
+start-spark:
+	docker run -it --detach \
+		-v "$(shell pwd)/scripts":/home/spark/scripts \
+		-v "$(shell pwd)/data":/home/spark/data \
+		--name "${SPARK_CONTAINER_NAME}" --rm \
+		--hostname "${ADMIN_PANEL_HOST}" "${SPARK_IMAGE_NAME}"
+
+open-spark-admin-panel:
+	open http://${ADMIN_PANEL_HOST}":"${SPARK_ADMIN_PANEL_PORT}"
+
+execute-spark-map-reduce: ./scripts/spark-map-reduce.sh
+	docker exec "${SPARK_CONTAINER_NAME}" ./scripts/spark-map-reduce.sh
