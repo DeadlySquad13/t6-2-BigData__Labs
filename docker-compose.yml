@@ -2,11 +2,12 @@ services:
   spark-master:
     container_name: "${SPARK_CONTAINER_NAME}--master"
     image: ${SPARK_IMAGE_NAME:-Apache__Spark}
-    environment:
-      ADMIN_PANEL_PORT: ${ADMIN_PANEL_PORT}
+    # environment:
+    #   ADMIN_PANEL_PORT: ${SPARK_ADMIN_PANEL_PORT}
     #   Overriding host volume points to points in our repo nstead of examples in
     # Apache__Spark submodule.
     volumes:
+        - ./scripts:/opt/spark/scripts
         - ./data:/opt/spark/data
     extends:
         file: ./Apache__Spark/docker-compose.yml

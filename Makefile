@@ -110,6 +110,9 @@ build-spark: prepare-spark
 up-spark:
 	docker compose up spark-*
 
+stop-spark:
+	docker compose stop spark-*
+
 # TODO: Reuse `run` target.
 run-spark:
 	docker run -it \
