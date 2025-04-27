@@ -76,6 +76,7 @@ build-hadoop:
 	docker build -t "${HADOOP_IMAGE_NAME}" ./Apache__Hadoop
 
 # TODO: Reuse `run` target.
+# TODO: Rewrite to proper docker-compose aka Spark's.
 run-hadoop:
 	docker run -it \
 		-v "$(shell pwd)/scripts":/home/hduser/scripts \
@@ -85,6 +86,7 @@ run-hadoop:
 		--hostname "${ADMIN_PANEL_HOST}" "${HADOOP_IMAGE_NAME}"
 
 # TODO: Reuse `start` target.
+# TODO: Rewrite to proper docker-compose aka Spark's.
 start-hadoop:
 	docker run -it --detach \
 		-v "$(shell pwd)/scripts":/home/hduser/scripts \
@@ -103,31 +105,15 @@ execute-hadoop-map-reduce: ./scripts/hadoop-map-reduce.sh
 prepare-spark:
 	git submodule update --init --recursive -- ./Apache__Spark
 
-# TODO: Reuse `build-image` target.
-build-spark: prepare-spark
-	docker build -t "${SPARK_IMAGE_NAME}" ./Apache__Spark
-
-up-spark:
+run-spark: prepare-spark ./Apache__Spark/docker-compose.yml ./Apache__Spark/Dockerfile
+	# FIX: Doesn't actually attach. I guess because of array of services.
 	docker compose up spark-*
+
+start-spark: prepare-spark
+	docker compose up --detatch spark-*
 
 stop-spark:
 	docker compose stop spark-*
-
-# TODO: Reuse `run` target.
-run-spark:
-	docker run -it \
-		-v "$(shell pwd)/scripts":/home/spark/scripts \
-		-v "$(shell pwd)/data":/home/spark/data \
-		--name "${SPARK_CONTAINER_NAME}" --rm \
-		--hostname "${ADMIN_PANEL_HOST}" "${SPARK_IMAGE_NAME}"
-
-# TODO: Reuse `start` target.
-start-spark:
-	docker run -it --detach \
-		-v "$(shell pwd)/scripts":/home/spark/scripts \
-		-v "$(shell pwd)/data":/home/spark/data \
-		--name "${SPARK_CONTAINER_NAME}" --rm \
-		--hostname "${ADMIN_PANEL_HOST}" "${SPARK_IMAGE_NAME}"
 
 open-spark-admin-panel:
 	open http://${ADMIN_PANEL_HOST}":"${SPARK_ADMIN_PANEL_PORT}"
