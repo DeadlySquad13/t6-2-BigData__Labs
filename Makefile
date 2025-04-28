@@ -67,17 +67,17 @@ rm-all-containers:
 	docker rm $(docker ps --quiet --all)
 
 # ### Apache Hadoop specific.
-prepare-hadoop:
+prepare-hadoop: ./.gitmodules
 	git submodule update --init --recursive -- ./Apache__Hadoop
 
 # TODO: Reuse `build-image` target.
-build-hadoop:
+build-hadoop: prepare-hadoop
 	# Curl command [7/16] will run for a bit.
 	docker build -t "${HADOOP_IMAGE_NAME}" ./Apache__Hadoop
 
 # TODO: Reuse `run` target.
 # TODO: Rewrite to proper docker-compose aka Spark's.
-run-hadoop:
+run-hadoop: build-hadoop
 	docker run -it \
 		-v "$(shell pwd)/scripts":/home/hduser/scripts \
 		-v "$(shell pwd)/data":/home/hduser/data \
@@ -87,7 +87,7 @@ run-hadoop:
 
 # TODO: Reuse `start` target.
 # TODO: Rewrite to proper docker-compose aka Spark's.
-start-hadoop:
+start-hadoop: build-hadoop
 	docker run -it --detach \
 		-v "$(shell pwd)/scripts":/home/hduser/scripts \
 		-v "$(shell pwd)/data":/home/hduser/data \
@@ -102,7 +102,7 @@ execute-hadoop-map-reduce: ./scripts/hadoop-map-reduce.sh
 	docker exec "${HADOOP_CONTAINER_NAME}" ./scripts/hadoop-map-reduce.sh
 
 # ### Apache Spark specific.
-prepare-spark:
+prepare-spark: ./.gitmodules
 	git submodule update --init --recursive -- ./Apache__Spark
 
 run-spark: prepare-spark ./docker-compose.spark.yml ./Apache__Spark/docker-compose.yml ./Apache__Spark/Dockerfile
