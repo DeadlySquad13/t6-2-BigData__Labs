@@ -96,7 +96,7 @@ start-hadoop:
 		--hostname "${ADMIN_PANEL_HOST}" "${HADOOP_IMAGE_NAME}"
 
 open-hadoop-admin-panel:
-	open http://"${ADMIN_PANEL_HOST}":"${HADOOP_ADMIN_PANEL_PORT}"
+	./scripts/open.sh "http://${ADMIN_PANEL_HOST}:${HADOOP_ADMIN_PANEL_PORT}"
 
 execute-hadoop-map-reduce: ./scripts/hadoop-map-reduce.sh
 	docker exec "${HADOOP_CONTAINER_NAME}" ./scripts/hadoop-map-reduce.sh
@@ -116,7 +116,7 @@ stop-spark:
 	docker compose stop spark-*
 
 open-spark-admin-panel:
-	open http://${ADMIN_PANEL_HOST}":"${SPARK_ADMIN_PANEL_PORT}"
+	./scripts/open.sh "http://${ADMIN_PANEL_HOST}:${SPARK_ADMIN_PANEL_PORT}"
 
 execute-spark-map-reduce: ./scripts/spark-map-reduce.sh
 	docker exec "${SPARK_CONTAINER_NAME}" ./scripts/spark-map-reduce.sh
