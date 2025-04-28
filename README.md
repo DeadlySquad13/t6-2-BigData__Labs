@@ -32,10 +32,12 @@ pixi run thread-pool-executer --help
 ```
 
 ## 2. Apache Hadoop
+Uses Docker paired with .env and .env.dev extensively for configuration.
+Check [.env.example](./.env.example) and
+[.env.dev.example](./.env.dev.example).
+
 Run:
 ```bash
-make prepare-hadoop
-make build-hadoop
 # Or `make run-hadoop` to see logs in real-time.
 make start-hadoop # Will run detached.
 ```
@@ -54,6 +56,29 @@ messing up you connection.
 > See `$HADOOP_HOME/etc/hadoop/hdfs-site.xml` (or in admin panel go to Utilities/Configuration):
 > dfs.permissions
 >   false
+
+Execute Map & Reduce using `execute-hadoop-map-reduce`. It will iterate through
+all the "data/test-*.csv" using hdfs map&reduce mechanism to count words. It
+will count time elapsed for each dataset. Check [script](./scripts/hadoop-map-reduce.sh)
+and [mapper](./scripts/mapper.py) & [reducer](./scripts/reducer.py) implementations for more details.
+
+## 3. Apache Spark
+Everything the same as in [2. Apache Hadoop](<README#2. Apache Hadoop>) if not stated otherwise, just change "hadoop"
+to "spark". Also uses .env and .env.dev, check their respective example files.
+For more precise configuration check out [Spark's .env example](./Apache__Spark/.env.example).
+
+For example, to get started run:
+```bash
+# Or `make run-spark` to see logs in real-time.
+make start-spark # Will run detached.
+```
+
+Both `run-spark` and `start-spark` will create a volume connecting:
+- [data folder on host](./data) and `/opt/spark/data` in container.
+- [scripts folder on host](./scripts) and `/opt/spark/scripts` in container.
+
+Just as Hadoop uses `execute-spark-map-reduce` target. Check [script](./scripts/spark-map-reduce.sh)
+and [Python implementation](./scripts/spark-map-reduce.py) for more details.
 
 ## Contributing
 Created using Base with Docker Project bootstrap template
