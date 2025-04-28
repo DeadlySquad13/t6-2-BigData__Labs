@@ -105,18 +105,17 @@ execute-hadoop-map-reduce: ./scripts/hadoop-map-reduce.sh
 prepare-spark:
 	git submodule update --init --recursive -- ./Apache__Spark
 
-run-spark: prepare-spark ./Apache__Spark/docker-compose.yml ./Apache__Spark/Dockerfile
-	# FIX: Doesn't actually attach. I guess because of array of services.
-	docker compose up spark-*
+run-spark: prepare-spark ./docker-compose.spark.yml ./Apache__Spark/docker-compose.yml ./Apache__Spark/Dockerfile
+	docker compose -f ./docker-compose.spark.yml up
 
-start-spark: prepare-spark
-	docker compose up --detatch spark-*
+start-spark: prepare-spark ./docker-compose.spark.yml ./Apache__Spark/docker-compose.yml ./Apache__Spark/Dockerfile
+	docker compose -f ./docker-compose.spark.yml up --detach
 
 stop-spark:
-	docker compose stop spark-*
+	docker compose -f ./docker-compose.spark.yml stop
 
 open-spark-admin-panel:
 	./scripts/open.sh "http://${ADMIN_PANEL_HOST}:${SPARK_ADMIN_PANEL_PORT}"
 
 execute-spark-map-reduce: ./scripts/spark-map-reduce.sh
-	docker exec "${SPARK_CONTAINER_NAME}" ./scripts/spark-map-reduce.sh
+	docker exec "${SPARK_CONTAINER_NAME}--master" ./scripts/spark-map-reduce.sh
